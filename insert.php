@@ -38,7 +38,7 @@
 
     <br />
 
-    <form method="GET" action="insert.php">
+    <form method="POST" action="insert.php">
         <div class="row g-3">
             <div class="col-sm">
                 <input type="text" class="form-control" placeholder="ID" id="iid" name="iid">
@@ -72,19 +72,38 @@
 
     $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
 
-    if (isset($_GET['submit'])) {
-        $iname = trim($_GET['iname']);
-        $iid = trim($_GET['iid']);
-        $iprice = trim($_GET['iprice']);
-        $idesc = trim($_GET['idesc']);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) 
+    {
+        $iname = trim($_POST['iname']);
+        $iid = trim($_POST['iid']);
+        $iprice = trim($_POST['iprice']);
+        $idesc = trim($_POST['idesc']);
 
-        if (empty($iname) || empty($iid) || empty($iprice) || empty($idesc)) {
+        if (empty($iname) || empty($iid) || empty($iprice) || empty($idesc)) 
+        {
             echo "<div class='alert alert-danger' role='alert'>
                 Please fill out all data fields!
               </div>";
+        } 
+        else 
+        {
+            $sql = "INSERT INTO item (iId, Iname, Sprice, Idescription) VALUES (?, ?, ?, ?)";
+            $stmt = mysqli_prepare($connection, $sql);
+
+            mysqli_stmt_bind_param($stmt, 'ssds', $iid, $iname, $iprice, $idesc);
+
+            if (mysqli_stmt_execute($stmt)) 
+            {
+                echo "<div class='alert alert-success' role='alert'>Item added successfully!</div>";
+            } 
+            else 
+            {
+                echo "<div class='alert alert-danger' role='alert'>Error: Could not insert data into the database.</div>";
+            }
         }
     }
 
+    $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
     // Query the database
     $result = mysqli_query($connection, $sql);
 
