@@ -19,9 +19,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link active" href="index.php">Question 1</a>
+                    <a class="nav-link" href="index.php">Question 1</a>
                     <a class="nav-link" href="insert.php">Question 2</a>
-                    <a class="nav-link" href="update.php">Question 3</a>
+                    <a class="nav-link active" href="update.php">Question 3</a>
                     <a class="nav-link" href="delete.php">Question 4</a>
                 </div>
             </div>
@@ -33,8 +33,7 @@
 
 <div class="container">
     <p>
-        Question 1: Display the ITEM details based on any one of the following that the user is asked to enter: Item
-        name or Item ID.
+        Question 3: Update the item that you just added "Frozen Broccoli" to "Organic Fresh Broccoli" using the web interface you created.
     </p>
 
     <br />
