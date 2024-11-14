@@ -38,7 +38,7 @@
 
     <br />
 
-    <form method="GET" action="index.php">
+    <form method="GET" action="update.php">
         <div class="row">
             <div class="col-sm-2">
                 <label for="name" class="col-form-label">Search by Item Name:</label>

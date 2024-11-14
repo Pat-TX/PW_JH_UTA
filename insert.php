@@ -38,30 +38,29 @@
 
     <br />
 
-    <form method="GET" action="index.php">
-        <div class="row">
-            <div class="col-sm-2">
-                <label for="name" class="col-form-label">Search by Item Name:</label>
+    <form method="GET" action="insert.php">
+        <div class="row g-3">
+            <div class="col-sm">
+                <input type="text" class="form-control" placeholder="ID" id="iid" name="iid">
             </div>
-            <div class="col-sm-10">
-                <input class="form-control" type="text" id="name" name="name" placeholder="Item Name"><br><br>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" placeholder="Item Name" id="iname" name="iname">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" placeholder="Price" id="iprice" name="iprice">
+            </div>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" placeholder="Description" id="idesc" name="idesc">
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-sm-2">
-                <label for="id" class="col-form-label">Search by Item ID:</label>
-            </div>
-            <div class="col-sm-10">
-                <input class="form-control" type="text" id="id" name="id" placeholder="Item ID"><br><br>
-            </div>
-        </div>
+        <br />
 
         <div class="row text-center">
             <div class="d-grid mb-3">
-            
-                <button type="submit" class="btn btn-primary">Search for Item</button>
-            
+
+                <button type="submit" class="btn btn-primary" name="submit">Add Item to Table</button>
+
             </div>
         </div>
 
@@ -73,28 +72,16 @@
 
     $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
 
-    $name = isset($_GET['name']) ? trim($_GET['name']) :'';
-    $id = isset($_GET['id']) ? trim($_GET['id']) :'';
+    if (isset($_GET['submit'])) {
+        $iname = trim($_GET['iname']);
+        $iid = trim($_GET['iid']);
+        $iprice = trim($_GET['iprice']);
+        $idesc = trim($_GET['idesc']);
 
-    if (!empty($name) && !empty($id)) 
-    {
-        echo "<div class='alert alert-danger' role='alert'>
-                Only one field should be used at a time! Showing all data.
+        if (empty($iname) || empty($iid) || empty($iprice) || empty($idesc)) {
+            echo "<div class='alert alert-danger' role='alert'>
+                Please fill out all data fields!
               </div>";
-    }
-    elseif(!empty($name) || !empty($id))
-    {
-        $sql = '';
-
-        if (!empty($name))
-        {
-            $toSearch = mysqli_real_escape_string($connection, $name);
-            $sql = "SELECT iId, Iname, Sprice, Idescription FROM item WHERE Iname LIKE '%$toSearch%'";
-        }
-        else if (!empty($id))
-        {
-            $toSearch = mysqli_real_escape_string($connection, $id);
-            $sql = "SELECT iId, Iname, Sprice, Idescription FROM item WHERE iId = '$toSearch'";
         }
     }
 
