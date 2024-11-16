@@ -69,7 +69,6 @@
     </form>
 
     <?php
-    // Include the database connection file
     require 'db.php';
 
     $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
@@ -93,7 +92,6 @@
             mysqli_stmt_execute($check_stmt);
             mysqli_stmt_store_result($check_stmt);
 
-            // If no rows are returned, the item does not exist
             if (mysqli_stmt_num_rows($check_stmt) == 0) 
             {
                 echo "<div class='alert alert-danger' role='alert'>
@@ -126,17 +124,13 @@
     }
 
     $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
-    // Query the database
     $result = mysqli_query($connection, $sql);
 
-    // Check if there are results
     if (mysqli_num_rows($result) > 0) 
     {
-        // Display data in a table
         echo "<table class='table table-striped table-hover'>";
         echo "<tr><th scope='col'>Item ID</th><th scope='col'>Item Name</th><th scope='col'>Price</th><th scope='col'>Description</th></tr>";
 
-        // Fetch and display each row of data
         while ($row = mysqli_fetch_assoc($result)) 
         {
             echo "<tr>";
@@ -156,7 +150,6 @@
               </div>";
     }
 
-    // Close the connection
     mysqli_close($connection);
     ?>
 </div>

@@ -69,7 +69,6 @@
     </form>
 
     <?php
-    // Include the database connection file
     require 'db.php';
 
     $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
@@ -99,16 +98,12 @@
         }
     }
 
-    // Query the database
     $result = mysqli_query($connection, $sql);
 
-    // Check if there are results
     if (mysqli_num_rows($result) > 0) {
-        // Display data in a table
         echo "<table class='table table-striped table-hover'>";
         echo "<tr><th scope='col'>Item ID</th><th scope='col'>Item Name</th><th scope='col'>Price</th><th scope='col'>Description</th></tr>";
 
-        // Fetch and display each row of data
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
             echo "<td>" . htmlspecialchars($row['iId']) . "</td>";
@@ -125,7 +120,6 @@
               </div>";
     }
 
-    // Close the connection
     mysqli_close($connection);
     ?>
 </div>
