@@ -108,7 +108,14 @@
 
                 if (mysqli_stmt_execute($stmt)) 
                 {
-                    echo "<div class='alert alert-success' role='alert'>Item updated successfully!</div>";
+                    if (strlen($uname) > 15)
+                    {
+                        echo "<div class='alert alert-warning' role='alert'>Item updated successfully, however the updated name is greater than 15 characters, so the name has been truncated.</div>";
+                    }
+                    else
+                    {
+                        echo "<div class='alert alert-success' role='alert'>Item updated successfully!</div>";
+                    }
                 } 
                 else 
                 {
