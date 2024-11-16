@@ -1,3 +1,10 @@
+<!-- 
+
+Patrick Williams, ID: 1002030029
+Jeff Hernandez, ID: 1002162250
+
+-->
+
 <?php
 
 $host = "localhost";
