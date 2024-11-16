@@ -33,35 +33,36 @@
 
 <div class="container">
     <p>
-        Question 3: Update the item that you just added "Frozen Broccoli" to "Organic Fresh Broccoli" using the web interface you created.
+        Question 3: Update the item that you just added "Frozen Broccoli" to "Organic Fresh Broccoli" using the web
+        interface you created.
     </p>
 
     <br />
 
-    <form method="GET" action="update.php">
+    <form method="POST" action="update.php">
         <div class="row">
             <div class="col-sm-2">
-                <label for="name" class="col-form-label">Search by Item Name:</label>
+                <label for="name" class="col-form-label">Item Name to Change:</label>
             </div>
             <div class="col-sm-10">
-                <input class="form-control" type="text" id="name" name="name" placeholder="Item Name"><br><br>
+                <input class="form-control" type="text" id="cname" name="cname" placeholder="Current Item Name"><br><br>
             </div>
         </div>
 
         <div class="row">
             <div class="col-sm-2">
-                <label for="id" class="col-form-label">Search by Item ID:</label>
+                <label for="id" class="col-form-label">New Item Name:</label>
             </div>
             <div class="col-sm-10">
-                <input class="form-control" type="text" id="id" name="id" placeholder="Item ID"><br><br>
+                <input class="form-control" type="text" id="uname" name="uname" placeholder="Updated Item Name"><br><br>
             </div>
         </div>
 
         <div class="row text-center">
             <div class="d-grid mb-3">
-            
-                <button type="submit" class="btn btn-primary">Search for Item</button>
-            
+
+                <button type="submit" class="btn btn-primary" name="submit">Update Item Name</button>
+
             </div>
         </div>
 
@@ -73,42 +74,64 @@
 
     $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
 
-    $name = isset($_GET['name']) ? trim($_GET['name']) :'';
-    $id = isset($_GET['id']) ? trim($_GET['id']) :'';
-
-    if (!empty($name) && !empty($id)) 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) 
     {
-        echo "<div class='alert alert-danger' role='alert'>
-                Only one field should be used at a time! Showing all data.
+        $cname = trim($_POST['cname']);
+        $uname = trim($_POST['uname']);
+
+        if (empty($cname) || empty($uname)) 
+        {
+            echo "<div class='alert alert-danger' role='alert'>
+                Please fill out all data fields!
               </div>";
-    }
-    elseif(!empty($name) || !empty($id))
-    {
-        $sql = '';
-
-        if (!empty($name))
+        } 
+        else 
         {
-            $toSearch = mysqli_real_escape_string($connection, $name);
-            $sql = "SELECT iId, Iname, Sprice, Idescription FROM item WHERE Iname LIKE '%$toSearch%'";
-        }
-        else if (!empty($id))
-        {
-            $toSearch = mysqli_real_escape_string($connection, $id);
-            $sql = "SELECT iId, Iname, Sprice, Idescription FROM item WHERE iId = '$toSearch'";
+            $check_sql = "SELECT Iname FROM item WHERE Iname = ?";
+            $check_stmt = mysqli_prepare($connection, $check_sql);
+            mysqli_stmt_bind_param($check_stmt, "s", $cname);
+            mysqli_stmt_execute($check_stmt);
+            mysqli_stmt_store_result($check_stmt);
+
+            // If no rows are returned, the item does not exist
+            if (mysqli_stmt_num_rows($check_stmt) == 0) 
+            {
+                echo "<div class='alert alert-danger' role='alert'>
+                        Item '$cname' not found in the database. Please check the name and try again.
+                      </div>";
+            } 
+            else 
+            {
+                $sql = "UPDATE item SET Iname = ? WHERE Iname = ?";
+                $stmt = mysqli_prepare($connection, $sql);
+                mysqli_stmt_bind_param($stmt, "ss", $uname, $cname);
+
+                if (mysqli_stmt_execute($stmt)) 
+                {
+                    echo "<div class='alert alert-success' role='alert'>Item updated successfully!</div>";
+                } 
+                else 
+                {
+                    echo "<div class='alert alert-danger' role='alert'>Error: Could not update data in the database.</div>";
+                }
+            }
         }
     }
 
+    $sql = "SELECT iId, Iname, Sprice, Idescription FROM item";
     // Query the database
     $result = mysqli_query($connection, $sql);
 
     // Check if there are results
-    if (mysqli_num_rows($result) > 0) {
+    if (mysqli_num_rows($result) > 0) 
+    {
         // Display data in a table
         echo "<table class='table table-striped table-hover'>";
         echo "<tr><th scope='col'>Item ID</th><th scope='col'>Item Name</th><th scope='col'>Price</th><th scope='col'>Description</th></tr>";
 
         // Fetch and display each row of data
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row = mysqli_fetch_assoc($result)) 
+        {
             echo "<tr>";
             echo "<td>" . htmlspecialchars($row['iId']) . "</td>";
             echo "<td>" . htmlspecialchars($row['Iname']) . "</td>";
@@ -118,7 +141,9 @@
         }
 
         echo "</table>";
-    } else {
+    } 
+    else 
+    {
         echo "<div class='alert alert-info' role='alert'>
                 No results found.
               </div>";
